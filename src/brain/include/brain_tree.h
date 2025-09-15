@@ -1,11 +1,17 @@
 #pragma once
 
+#include <memory>
+
 #include <behaviortree_cpp/behavior_tree.h>
 #include <behaviortree_cpp/bt_factory.h>
 
 #include "types.h"
 
 class Brain;
+
+namespace BT {
+    class FileLogger;
+}
 
 using namespace std;
 using namespace BT;
@@ -38,6 +44,7 @@ public:
 private:
     Tree tree;
     Brain *brain;
+    std::unique_ptr<BT::FileLogger> file_logger_;
 
     /**
      * Initialize the entries in the blackboard.

@@ -5,6 +5,8 @@
 #include "utils/print.h"
 #include "utils/misc.h"
 #include "std_msgs/msg/string.hpp"
+#include "behaviortree_cpp/loggers/bt_file_logger.h"
+
 
 /**
  * Here, a macro definition is used to reduce the amount of code in RegisterBuilder.
@@ -47,6 +49,9 @@ void BrainTree::init()
 
     factory.registerBehaviorTreeFromFile(brain->config->treeFilePath);
     tree = factory.createTree("MainTree");
+
+    // Ele criará um arquivo chamado "tree_trace.fbl" para registrar a execução.
+    file_logger_ = std::make_unique<BT::FileLogger>(tree, "tree_trace.fbl");
 
     // init blackboard entry
     initEntry();

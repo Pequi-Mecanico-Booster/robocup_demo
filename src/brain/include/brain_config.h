@@ -49,8 +49,8 @@ public:
     FieldDimensions fieldDimensions;
 
     // Camera resolution
-    double camPixX = 1280;
-    double camPixY = 720;
+    double camPixX = 640;
+    double camPixY = 360;
 
     // Camera angle
     double camAngleX = deg2rad(90);

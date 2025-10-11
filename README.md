@@ -40,9 +40,82 @@ To decide jetpack version, please execute `dpkg -l | grep jetpack` on host.
 
 # Run on the actual robot
 ./scripts/start.sh
-```
+
 
 ## Documents
 [Chinese Version](https://booster.feishu.cn/wiki/P5kJw6nDGib5wskZ3Yfc289lnIg)
 
 [English Version](https://booster.feishu.cn/wiki/XY6Kwrq1bizif4kq7X9c14twnle)
+
+
+
+# RoboCup Demo - Docker Setup
+
+This repository provides a **Docker-based setup** for the **robocup_demo** project, adapted to run on **NVIDIA Jetson** devices with **CUDA** support.  
+Custom `Dockerfile` and `docker-compose.yml` files were created to easily start the system components, including **robocup_demo** and **zed**.
+
+---
+
+## Project Structure
+
+- **dockerfile.jetson**: main image based on **JetPack 6.2**, containing all necessary libraries to run robocup_demo.
+- **docker-compose.yml**: orchestrates the simultaneous execution of both `robocup_demo` and `zed` containers.
+- **robocup_demo container**: contains the project source code and its dependencies.
+- **zed container**: runs the ZED camera system, based on version **5.0**, compatible with JetPack 6.2.
+
+---
+
+## Requirements
+
+- [Installed **Docker** and **Docker Compose**](https://www.cytron.io/tutorial/docker-setup-for-jetson-orin-nano-super-jp6.2?srsltid=AfmBOoobhJK4ev8m_QYQQtgzMrFMoV9xdgf6AkJuBkOsLImfvIJPU8Zg)
+---
+
+## Important Notes
+
+1. **Image Build**
+   - A **direct Docker build** fails because CUDA/NVIDIA libraries are missing at build time.  
+   - The correct procedure is:
+     1. Build the base image using `dockerfile.jetson`  
+     2. Enter the container  
+     3. Build the repository manually inside the container  
+     4. Perform a **docker commit** to create the final image
+
+
+2. **ZED Integration**
+   - When starting the `robocup_demo` service through `docker-compose`, the `zed` service is also launched automatically, since the demo depends on ZED camera data.
+
+---
+
+## Build and Run Steps
+
+### Build Jetson Image
+
+```bash
+docker buildx build -f dockerfile.jetson -t robocup_demo_v1:1.0 .
+docker buildx build -f dockerfile.zed -t zed .
+```
+
+### Enter the Container
+```bash
+docker compose run robocup_demo bash
+```
+
+### Build Repository Inside the Container
+```bash
+source /opt/ros/humble/setup.bash
+./scripts/build.sh
+
+```
+
+### Commit the Compiled Container (in another terminal)
+```bash
+docker ps  # Get the CONTAINER ID
+docker commit <CONTAINER ID> robocup_demo_v1:1.0
+```
+
+### Run the System via Docker Compose
+```bash
+docker compose down
+docker compose up robocup_demo
+```
+---

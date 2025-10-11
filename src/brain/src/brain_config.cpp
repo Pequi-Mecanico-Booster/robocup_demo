@@ -30,6 +30,14 @@ void BrainConfig::handle()
     {
         fieldDimensions = FD_KIDSIZE;
     }
+    else if (fieldType == "custom_size")
+    {
+        fieldDimensions = FD_CUSTOMSIZE;
+    }
+    else if (fieldType == "custom_mid_size")
+    {
+        fieldDimensions = FD_CUSTOMMIDSIZE;
+    }
     else
     {
         throw invalid_argument("[Error] fieldType must be one of [adult_size, kid_size]. Got: " + fieldType);

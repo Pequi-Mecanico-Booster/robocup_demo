@@ -26,6 +26,8 @@ struct FieldDimensions
 };
 const FieldDimensions FD_KIDSIZE{9, 6, 1.5, 2.6, 0.75, 2, 5, 1, 3};
 const FieldDimensions FD_ADULTSIZE{14, 9, 2.1, 2.6, 1.5, 3, 6, 1, 4};
+const FieldDimensions FD_CUSTOMMIDSIZE{7.36, 4.16, 1.35, 2.42, 0.56, 1.9, 2.8, 0.66, 2.46};
+const FieldDimensions FD_CUSTOMSIZE{5.87, 4.63, 1.37, 2.77, 0.50, 1.99, 3.86, 0.7, 3.09};
 
 // Pose2D, used to record a point on a plane and its orientation
 struct Pose2D

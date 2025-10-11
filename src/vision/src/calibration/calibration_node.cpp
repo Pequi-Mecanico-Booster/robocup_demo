@@ -58,7 +58,7 @@ private:
 
     std::string input_cfg_path_;
     std::string log_path_;
-    std::string camera_type_;
+    std::string camera_type_ = "zed";
 
     YAML::Node cfg_node_;
 
@@ -88,8 +88,8 @@ private:
 
 CalibrationNode::CalibrationNode(const std::string &node_name) :
     rclcpp::Node(node_name) {
-    this->declare_parameter<int>("board_w", 11);
-    this->declare_parameter<int>("board_h", 8);
+    this->declare_parameter<int>("board_w", 9);
+    this->declare_parameter<int>("board_h", 6);
     this->declare_parameter<float>("board_square_size", 0.05);
 }
 

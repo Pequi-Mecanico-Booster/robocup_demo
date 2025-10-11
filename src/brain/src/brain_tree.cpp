@@ -722,9 +722,7 @@ NodeStatus SelfLocate::tick()
     double residual;
     auto res = brain->locator->locateRobot(markers, constraints);
 
-    // if (brain->config->rerunLogEnable) {
-    if (false)
-    {
+    if (brain->config->rerunLogEnable) {
         brain->log->setTimeNow();
         brain->log->log("locator/time",
                         rerun::Scalar(res.msecs));

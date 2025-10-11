@@ -23,7 +23,7 @@ Brain::Brain() : rclcpp::Node("brain_node")
     declare_parameter<double>("robot.vx_factor", 0.95);
     declare_parameter<double>("robot.yaw_offset", 0.1);
 
-    declare_parameter<bool>("rerunLog.enable", false);
+    declare_parameter<bool>("rerunLog.enable", true);
     declare_parameter<string>("rerunLog.server_addr", "");
     declare_parameter<int>("rerunLog.img_interval", 10);
 
@@ -64,7 +64,8 @@ void Brain::init()
     detectionsSubscription = create_subscription<vision_interface::msg::Detections>("/booster_vision/detection", 1, bind(&Brain::detectionsCallback, this, _1));
     odometerSubscription = create_subscription<booster_interface::msg::Odometer>("/odometer_state", 1, bind(&Brain::odometerCallback, this, _1));
     lowStateSubscription = create_subscription<booster_interface::msg::LowState>("/low_state", 1, bind(&Brain::lowStateCallback, this, _1));
-    imageSubscription = create_subscription<sensor_msgs::msg::Image>("/camera/camera/color/image_raw", 1, bind(&Brain::imageCallback, this, _1));
+    imageSubscription = create_subscription<sensor_msgs::msg::Image>("/zed/zed_node/left/image_rect_color", 1, bind(&Brain::imageCallback, this, _1));
+    // imageSubscription = create_subscription<sensor_msgs::msg::Image>("/camera/camera/color/image_raw", 1, bind(&Brain::imageCallback, this, _1));
     headPoseSubscription = create_subscription<geometry_msgs::msg::Pose>("/head_pose", 1, bind(&Brain::headPoseCallback, this, _1));
     recoveryStateSubscription = create_subscription<booster_interface::msg::RawBytesMsg>("fall_down_recovery_state", 1, bind(&Brain::recoveryStateCallback, this, _1));
 
@@ -363,8 +364,10 @@ void Brain::detectionsCallback(const vision_interface::msg::Detections &msg)
     for (int i = 0; i < gameObjects.size(); i++)
     {
         const auto &obj = gameObjects[i];
-        if (obj.label == "Ball")
+        if (obj.label == "Ball"){
+            std::cout << " BALL POSITION-> X: " << obj.posToRobot.x << " Y: " << obj.posToRobot.y << std::endl;
             balls.push_back(obj);
+        }
         if (obj.label == "Goalpost")
             goalPosts.push_back(obj);
         if (obj.label == "Person")

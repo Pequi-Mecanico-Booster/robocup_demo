@@ -200,13 +200,18 @@ void VisionNode::DepthCallback(const sensor_msgs::msg::Image::ConstSharedPtr &ms
         return;
     }
 
-    if (img.depth() != CV_16U) {
-        std::cerr << "image is not 16-bit depth." << std::endl;
+    cv::Mat depth16u;
+    if (img.depth() == CV_32F) {
+        img.convertTo(depth16u, CV_16U, 1000.0);
+    } else if (img.depth() == CV_16U) {
+        depth16u = img;
+    } else {
+        std::cerr << "image is not 16-bit depth or 32-bit float." << std::endl;
         return;
     }
 
     double timestamp = msg->header.stamp.sec + static_cast<double>(msg->header.stamp.nanosec) * 1e-9;
-    data_syncer_->AddDepth(DepthDataBlock(img, timestamp));
+    data_syncer_->AddDepth(DepthDataBlock(depth16u, timestamp));
 }
 
 void VisionNode::PoseCallBack(const geometry_msgs::msg::Pose::SharedPtr msg) {
